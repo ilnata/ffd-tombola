@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/javascripts/socket.io.js"></script>
+  </head>
+  <body>
+
+  <div id="main_estrattore_container">
+      <div id="estrattore_container">
+        <input type="text" name="numero" id="numero" />
+
+      </div>
+      <div id="risultati">
+          <div id="totali"></div>
+          <div id="tombole"></div>
+          <div id="cinquine"></div>
+      </div>
+      <div id="estrattore_container2">
+          <input type="text" name="cancella" id="cancella" placeholder="CANCELLA" />
+      </div>
+
+  </div>
+  <script type="text/javascript">
+
+      function sortNumber(a, b) {
+          return a - b;
+      }
+
+
+      $('#numero').bind('keyup', function(e){
+
+          if(e.keyCode == 13){
+
+            let numero = Number($(this).val());
+            if (numero>0 && numero<91){
+                $.ajax({
+                    url: "/estratto",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {numero: numero},
+                    success: function(data){
+                        $('#numero').val("");
+                        $('#totali').html('<div>TOMBOLE: '+ (data.tombole?data.tombole.length:0) + ' CINQUINE: '+ (data.cinquine?data.cinquine.length:0)+'</div>' );
+                        if (data.tombole && data.tombole.length>0) {
+                            $('#tombole').html("<div>"+(data.tombole.map(function(t){return Number(t.code)})).sort(sortNumber).join(" | ")+"</div>")
+
+                        }
+                        if (data.cinquine && data.cinquine.length>0) {
+                            $('#cinquine').html("<div>" + (data.cinquine.map(function (c) {
+                                return Number(c.code)
+                            })).sort(sortNumber).join(" | ") + "</div>")
+                        }
+                    }
+                })
+            }
+              $('#numero').val("");
+          }
+      })
+
+      $('#cancella').bind('keyup', function(e){
+
+          if(e.keyCode == 13){
+
+              let numero = Number($(this).val());
+              if (numero>0 && numero<91){
+                  $.ajax({
+                      url: "/cancellaestratto",
+                      type: "POST",
+                      dataType: 'json',
+                      data: {numero: numero},
+                      success: function(data){
+                          $('#cancella').val("");
+                          $('#totali').html('<div>TOMBOLE: <strong>'+ (data.tombole?data.tombole.length:0) + '</strong> CINQUINE: <strong>'+ (data.cinquine?data.cinquine.length:0)+'</strong></div>' );
+                          if (data.tombole && data.tombole.length>0) {
+                              $('#tombole').html("<div>"+(data.tombole.map(function(t){return Number(t.code)})).sort(sortNumber).join(" | ")+"</div>")
+
+                          }
+                          if (data.cinquine && data.cinquine.length>0) {
+                              $('#cinquine').html("<div>" + (data.cinquine.map(function (c) {
+                                  return Number(c.code)
+                              })).sort(sortNumber).join(" | ") + "</div>")
+                          }
+
+                      }
+                  })
+              }
+              $('#cancella').val("");
+          }
+      })
+      var socket = io("http://localhost:1223");
+
+    socket.on('estratto', function(data){
+        $('[data-num='+data.numero+']').addClass('extracted');
+    })
+  </script>
+  </body>
+</html>

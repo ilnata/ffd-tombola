@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/javascripts/socket.io.js"></script>
+  </head>
+  <body style="    height: 100vh;
+    width: 100vw;
+    overflow: hidden;">
+
+  <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div id="estratto">
+      <div id="numero_estratto">77</div>
+      <div id="cabala">LE GAMBE DELLE DONNE</div>
+  </div>
+
+  <div class="contenitore">
+    <div class="tabellone">
+        <div id="logo"></div>
+      <%
+      for(var r=0; r<9; r++){
+      %><div style="display: flex;"><%
+        for(var c=1; c<=10; c++){
+          %>
+            <div data-num="<%= (r*10)+c %>" class="number"
+                 <% if(r==0 && c==1){%>style="border-top-left-radius: 20px;"<%}%>
+                 <% if(r==0 && c==10){%>style="border-top-right-radius: 20px;"<%}%>
+                 <% if(r==8 && c==1){%>style="border-bottom-left-radius: 20px;"<%}%>
+                 <% if(r==8 && c==10){%>style="border-bottom-right-radius: 20px;"<%}%>
+
+            ><%= (r*10)+c %></div>
+          <%
+        }
+        %></div><%
+      }
+     %>
+        <div id="babbo"></div>
+        <div id="renna"></div>
+    </div>
+
+<!--<div class="col_dx">-->
+<!--sdfsdf-->
+<!--</div>-->
+  </div>
+
+
+
+  <script type="text/javascript">
+
+      $('#estratto').hide();
+    let extracted = [<%= numeri.join(",");%>];
+
+    let cabala = {
+    <%- cabala.map(function(c){
+        return c.numero+':"'+c.cabala+'"';
+    }).join(',')%>
+    };
+
+    for (let n of extracted){
+      $("[data-num="+n+"]").addClass('extracted');
+    }
+
+      var socket = io("http://localhost:1223");
+
+    var hide_estratto_timeout;
+    socket.on('estratto', function(data){
+        $('[data-num='+data.numero+']').addClass('extracted');
+        $('#numero_estratto').html(data.numero);
+
+        $('#cabala').html(cabala[data.numero]);
+
+        if (hide_estratto_timeout)
+            clearTimeout(hide_estratto_timeout);
+        $('#estratto').fadeIn(600);
+        hide_estratto_timeout = setTimeout(function(){
+            $('#estratto').fadeOut(500);
+        }, 5000)
+
+
+    })
+    socket.on('cancellaestratto', function(data){
+        $('[data-num='+data.numero+']').removeClass('extracted');
+    })
+  </script>
+  </body>
+</html>
