@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://root:root@mongodb:27017/?retryWrites=true&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256', {useNewUrlParser: true});
+mongoose.connect('mongodb://ffd:!ffd123$!@mongodb:27017/?retryWrites=true&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256', {useNewUrlParser: true});
 mongoose.connection.on('error', err => {
   console.log(err);
 });

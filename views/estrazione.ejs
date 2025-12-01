@@ -62,7 +62,8 @@
       $("[data-num="+n+"]").addClass('extracted');
     }
 
-      var socket = io("http://localhost:1223");
+      var socket = io("http://vps-a084403f.vps.ovh.net:1223");
+
 
     var hide_estratto_timeout;
     socket.on('estratto', function(data){
