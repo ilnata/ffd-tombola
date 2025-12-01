@@ -30,6 +30,11 @@ router.get('/estratti', async function(req, res, next) {
   res.json({numeri: e.map(function(n){return n.number})});
 });
 
+router.post('/pulisci_tabellone', async function(req, res, next){
+  await Estrazione.deleteMany({});
+  return res.json({status: 200});
+});
+
 router.post('/estratto', async function(req, res, next){
   let numero = Number(req.body.numero);
   if (numero>0 && numero<91) {

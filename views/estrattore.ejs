@@ -21,12 +21,31 @@
           <input type="text" name="cancella" id="cancella" placeholder="CANCELLA" />
       </div>
 
+
+      <div id="estrattore_container3">
+          <div 
+          style="width: 300px; background-color: #DDD; border: 1px solid #BBB; height: 50px; text-align: center; padding-top: 10px; text-align: center; cursor: pointer;"
+          id="pulisci_tabellone" class="pulisci_tabellone" >Pulisci tabellone</div>
+      </div>
+
   </div>
   <script type="text/javascript">
 
       function sortNumber(a, b) {
           return a - b;
       }
+
+      $('#pulisci_tabellone').bind('click', function(e){
+        $.ajax({
+            url: "/pulisci_tabellone",
+            type: "POST",
+            dataType: 'json',
+            data: {},
+            success: function(data){
+                document.location.reload = true;
+            }
+        })
+      })
 
 
       $('#numero').bind('keyup', function(e){
