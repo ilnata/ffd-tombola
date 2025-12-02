@@ -16,6 +16,7 @@ RUN python2 --version
 # Installa le dipendenze del progetto
 RUN npm install
 
+RUN ./node_modules/webpack-cli/bin/cli.js --config webpack.scss.config.js
 # Copia i file sorgente del progetto nella directory di lavoro (esclusi quelli definiti in .dockerignore)
 
 # Espone la porta 3000
