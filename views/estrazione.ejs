@@ -81,8 +81,13 @@
 
 
     })
+
     socket.on('cancellaestratto', function(data){
         $('[data-num='+data.numero+']').removeClass('extracted');
+    })
+
+    socket.on('ricarica', function(data){
+        window.location.reload();
     })
   </script>
   </body>

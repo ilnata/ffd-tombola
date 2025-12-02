@@ -32,6 +32,7 @@ router.get('/estratti', async function(req, res, next) {
 
 router.post('/pulisci_tabellone', async function(req, res, next){
   await Estrazione.deleteMany({});
+  io.emit('ricarica', {});
   return res.json({status: 200});
 });
 
