@@ -1,6 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
+// 1. Importa e configura Basic Auth qui
+var basicAuth = require('express-basic-auth');
+var proteggiRotta = basicAuth({
+    users: { 'tombola': 'tombola123!' },
+    challenge: true
+});
+
 var io = require('socket.io')();
 
 
@@ -16,12 +23,12 @@ let Cartella = require('../db/cartelle');
 let Estrazione = require('../db/estrazione');
 let Cabala = require('../db/cabala');
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', proteggiRotta, async function(req, res, next) {
   let numeri = await Estrazione.find().lean();
   let cabala = await Cabala.find().lean()
   res.render('estrazione', { numeri: numeri.map(function(n){return n.number}), cabala });
 });
-router.get('/estrattore', async function(req, res, next) {
+router.get('/estrattore', proteggiRotta,  async function(req, res, next) {
   res.render('estrattore');
 });
 
