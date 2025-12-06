@@ -214,7 +214,7 @@
               $('#cancella').val("");
           }
       })
-      var socket = io("http://localhost:1223");
+      var socket = io("https://tombola-socket.marconatalini.it");
 
     socket.on('estratto', function(data){
         $('[data-num='+data.numero+']').addClass('extracted');
